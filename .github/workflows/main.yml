@@ -84,4 +84,4 @@ jobs:
           app-name: 'gitHubDeployment'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_168A2A56EB3A467789F36DB82C94484F }}
-          package: build-artifact
+          package:  D:\MyWork\Github_Actions\Runner\Artifact\.NEt_Framework_Artifact
