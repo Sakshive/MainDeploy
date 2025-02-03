@@ -22,29 +22,18 @@ jobs:
       # - name: Restore NuGet packages
       #   run: nuget restore  # Restore the NuGet packages
 
-      # - name: Ensure 'published' directory exists
-      #   run: mkdir -p "${GITHUB_WORKSPACE}/published"  # Create the directory if it doesn't exist
-
-      # - name: Build
-      #   # run:  msbuild /nologo /verbosity:m /t:Build /p:Configuration=Release /p:PublishDir="${GITHUB_WORKSPACE}/published" "D:\GitHubDeploy\GithubProject\GithubProject.sln"
-      #   run: msbuild "D:\GitHubDeploy\GithubProject\GithubProject.sln" /p:Configuration=Release /p:PublishDir="$GITHUB_WORKSPACE/published" 
-
-         # Step 4: Build the .NET Framework project
+     
       - name: Build
         shell: cmd
         run: |
           msbuild GithubProject.sln /p:configuration="Release" /p:PublishUrl="../_build"
-   # Step 5: Publish the application to a folder
-      # - name: Publish
-      #   run: msbuild /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile "D:\GitHubDeploy\GithubProject\GithubProject.sln"
-     
 
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4  #  Updated version
         with:
           name: build-artifact
-          path: "./_build"
+          path: "../_build"
  
   # download-artifact:
   #   runs-on: Runner
