@@ -28,20 +28,12 @@ jobs:
         run: |
           msbuild GithubProject.sln /p:configuration="Release" /p:PublishUrl="../_build"
 
-      - name: List files in _build directory
-        run: |
-          echo "Listing files in _build directory"
-          dir ./_build
+    
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4  #  Updated version
         with:
-         name: build-artifact
-         path: "./_build"
-      # - name: Upload artifact
-      #   uses: actions/upload-artifact@v4  #  Updated version
-      #   with:
-      #     name: build-artifact
-      #     path: "./_build"
+          name: build-artifact
+          path: "../_build"
  
   # download-artifact:
   #   runs-on: Runner
@@ -54,12 +46,7 @@ jobs:
   #         path: D:\MyWork\Github_Actions\Runner\Artifact\.NEt_Framework_Artifact
         
         
-      # - name: Upload artifact for deployment job
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ASP-app
-      #     path: "$GITHUB_WORKSPACE/published/**"
-
+    
 
 
   # approve:
