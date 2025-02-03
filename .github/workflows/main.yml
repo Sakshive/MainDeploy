@@ -1,0 +1,103 @@
+name: Build and deploy ASP app to Azure Web App - gitHubDeployment
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: self-hosted  # Self-hosted runner
+
+    steps:
+      - uses: actions/checkout@v4  # Checkout the code
+
+      - name: Setup MSBuild path
+        uses: microsoft/setup-msbuild@v2
+
+      # - name: Setup NuGet
+      #   uses: NuGet/setup-nuget@v1.0.5
+
+      # - name: Restore NuGet packages
+      #   run: nuget restore  # Restore the NuGet packages
+
+      # - name: Ensure 'published' directory exists
+      #   run: mkdir -p "${GITHUB_WORKSPACE}/published"  # Create the directory if it doesn't exist
+
+      # - name: Build
+      #   # run:  msbuild /nologo /verbosity:m /t:Build /p:Configuration=Release /p:PublishDir="${GITHUB_WORKSPACE}/published" "D:\GitHubDeploy\GithubProject\GithubProject.sln"
+      #   run: msbuild "D:\GitHubDeploy\GithubProject\GithubProject.sln" /p:Configuration=Release /p:PublishDir="$GITHUB_WORKSPACE/published" 
+
+         # Step 4: Build the .NET Framework project
+      - name: Build
+        shell: cmd
+        run: |
+          msbuild GithubProject.sln /p:configuration="Release" /p:PublishUrl="../_build"
+   # Step 5: Publish the application to a folder
+      # - name: Publish
+      #   run: msbuild /p:Configuration=Release /p:DeployOnBuild=true /p:PublishProfile=FolderProfile "D:\GitHubDeploy\GithubProject\GithubProject.sln"
+     
+
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4  #  Updated version
+        with:
+          name: build-artifact
+          path: "./_build"
+ 
+  # download-artifact:
+  #   runs-on: Runner
+  #   needs: build  # This ensures it runs only after the 'build' job completes successfully
+  #   steps:
+  #     - name: Download artifact
+  #       uses: actions/download-artifact@v4  # Latest version
+  #       with:
+  #         name: build-artifact
+  #         path: D:\MyWork\Github_Actions\Runner\Artifact\.NEt_Framework_Artifact
+        
+        
+      # - name: Upload artifact for deployment job
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: ASP-app
+      #     path: "$GITHUB_WORKSPACE/published/**"
+
+
+
+  # approve:
+  #   runs-on: self-hosted
+  #   needs: build
+  #   environment:
+  #     name: approveit 
+  #   steps:
+  #     - name: Wait for approval before deploying to production
+  #       run: echo "Waiting for manual approval to deploy to production"
+
+
+
+
+
+
+          
+  deploy:
+    runs-on: self-hosted 
+    needs: build
+    environment:
+      name: 'Production'
+      url: "https://githubdeployment-hfa8fqa0erfyefe9.canadacentral-01.azurewebsites.net"
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: ASP-app
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'gitHubDeployment'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_168A2A56EB3A467789F36DB82C94484F }}
+          package: "${GITHUB_WORKSPACE}/published"
