@@ -49,14 +49,14 @@ jobs:
     
 
 
-  # approve:
-  #   runs-on: self-hosted
-  #   needs: build
-  #   environment:
-  #     name: approveit 
-  #   steps:
-  #     - name: Wait for approval before deploying to production
-  #       run: echo "Waiting for manual approval to deploy to production"
+  approve:
+    runs-on: self-hosted
+    needs: build
+    environment:
+      name: approveit 
+    steps:
+      - name: Wait for approval before deploying to production
+        run: echo "Waiting for manual approval to deploy to production"
 
 
 
