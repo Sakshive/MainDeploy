@@ -45,7 +45,7 @@ jobs:
           path: D:\MyWork\Github_Actions\Runner\Artifact\.NEt_Framework_Artifact
 
       - name: Set up Azure CLI
-        uses: azure/cli-action@v1
+        uses: azure/azure-cli-action@v1
      # Step 7: Login to Azure using the service principal
       - name: Azure Login
         uses: azure/login@v1
