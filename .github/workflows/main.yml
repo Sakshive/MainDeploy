@@ -19,8 +19,7 @@ jobs:
       # - name: Setup NuGet
       #   uses: NuGet/setup-nuget@v1.0.5
 
-      # - name: Restore NuGet packages
-      #   run: nuget restore  # Restore the NuGet packages
+    
 
      
       - name: Build
@@ -44,19 +43,39 @@ jobs:
         with:
           name: build-artifact
           path: D:\MyWork\Github_Actions\Runner\Artifact\.NEt_Framework_Artifact
-        
+
+      - name: Set up Azure CLI
+        uses: azure/cli-action@v1
+     # Step 7: Login to Azure using the service principal
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+         # client-id: ${{ secrets.AZURE_CLIENT_ID }}
+         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+         client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+   # Step 8: Deploy ARM template to create the Web App
+      - name: Deploy ARM template to create Azure Web App
+        run: |
+         az deployment sub create \
+           --name createWebAppDeployment \
+           --location eastus \
+           --template-file ./azure-webapp-template.json \
+           --parameters webAppName=<githubsebanaHai> appServicePlanName=<GitHubSeAyaHoon>
+  
+  
+          
         
     
 
 
-  approve:
-    runs-on: self-hosted
-    needs: build
-    environment:
-      name: approveit 
-    steps:
-      - name: Wait for approval before deploying to production
-        run: echo "Waiting for manual approval to deploy to production"
+  # approve:
+  #   runs-on: self-hosted
+  #   needs: build
+  #   environment:
+  #     name: approveit 
+  #   steps:
+  #     - name: Wait for approval before deploying to production
+  #       run: echo "Waiting for manual approval to deploy to production"
 
 
 
@@ -64,24 +83,28 @@ jobs:
 
 
           
-  deploy:
-    runs-on: self-hosted 
-    needs: build
-    environment:
-      name: 'Production'
-      url: "https://githubdeployment-hfa8fqa0erfyefe9.canadacentral-01.azurewebsites.net"
+  # deploy:
+  #   runs-on: self-hosted 
+  #   needs: build
+  #   environment:
+  #     name: 'Production'
+  #     url: "https://githubdeployment-hfa8fqa0erfyefe9.canadacentral-01.azurewebsites.net"
 
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifact
+  #   steps:
+  #     - name: Download artifact from build job
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: build-artifact
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'gitHubDeployment'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_168A2A56EB3A467789F36DB82C94484F }}
-          package:  D:\MyWork\Github_Actions\Runner\Artifact\.NEt_Framework_Artifact
+  #     - name: Deploy to Azure Web App
+  #       id: deploy-to-webapp
+  #       uses: azure/webapps-deploy@v2
+  #       with:
+  #         app-name: 'gitHubDeployment'
+  #         slot-name: 'Production'
+  #         publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_168A2A56EB3A467789F36DB82C94484F }}
+  #         package:  D:\MyWork\Github_Actions\Runner\Artifact\.NEt_Framework_Artifact
+# =-----------------------------------------------
+ # Step 6: Set up Azure CLI to deploy the Web App and ARM template
+ 
+  
