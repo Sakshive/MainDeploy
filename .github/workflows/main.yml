@@ -88,7 +88,7 @@ jobs:
     needs: build
     environment:
       name: 'Production'
-      url: "https://githubdeployment-hfa8fqa0erfyefe9.canadacentral-01.azurewebsites.net"
+      url: "githubactiondeployment-apewgvf8d9hxhhfu.northeurope-01.azurewebsites.net"
 
     steps:
       - name: Download artifact from build job
