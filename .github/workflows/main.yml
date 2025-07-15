@@ -29,7 +29,7 @@ jobs:
           "D:\SonarScannner\sonar-scanner net-framework\SonarScanner.MSBuild.exe" begin ^
             /k:"TrainingDemo_UI:master" ^
             /n:"githubAction" ^
-            /d:sonar.host.url="https://sonar.cybage.com" ^
+            /d:sonar.host.url="http://sonar.cybage.com" ^
             /d:sonar.login=%SONAR_TOKEN% ^
             /d:sonar.verbose=true
 
