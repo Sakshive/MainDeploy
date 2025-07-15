@@ -68,27 +68,27 @@ jobs:
 
 
           
-  deploy:
-    runs-on: self-hosted 
-    needs: build
-    environment:
-      name: 'Production'
-      url: "githubactiondeployment-apewgvf8d9hxhhfu.northeurope-01.azurewebsites.net"
+  # deploy:
+  #   runs-on: self-hosted 
+  #   needs: build
+  #   environment:
+  #     name: 'Production'
+  #     url: "githubactiondeployment-apewgvf8d9hxhhfu.northeurope-01.azurewebsites.net"
 
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifact
+  #   steps:
+  #     - name: Download artifact from build job
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: build-artifact
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'githubActionDeployment'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_168A2A56EB3A467789F36DB82C94484F }}
-          package:  D:\MyWork\Github_Actions\Runner\Artifact\.NEt_Framework_Artifact
+  #     - name: Deploy to Azure Web App
+  #       id: deploy-to-webapp
+  #       uses: azure/webapps-deploy@v2
+  #       with:
+  #         app-name: 'githubActionDeployment'
+  #         slot-name: 'Production'
+  #         publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_168A2A56EB3A467789F36DB82C94484F }}
+  #         package:  D:\MyWork\Github_Actions\Runner\Artifact\.NEt_Framework_Artifact
 # =-----------------------------------------------
 
  
