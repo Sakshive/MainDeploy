@@ -34,15 +34,15 @@ jobs:
           name: build-artifact
           path: "./_build"
  
-  download-artifact:
-    runs-on: Runner
-    needs: build  # This ensures it runs only after the 'build' job completes successfully
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4  # Latest version
-        with:
-          name: build-artifact
-          path: D:\MyWork\Github_Actions\Runner\Artifact\.NEt_Framework_Artifact
+  # download-artifact:
+  #   runs-on: Runner
+  #   needs: build  # This ensures it runs only after the 'build' job completes successfully
+  #   steps:
+  #     - name: Download artifact
+  #       uses: actions/download-artifact@v4  # Latest version
+  #       with:
+  #         name: build-artifact
+  #         path: D:\MyWork\Github_Actions\Runner\Artifact\.NEt_Framework_Artifact
 
       # - name: Set up Azure CLI
       #   uses: azure/azure-cli-action@v1
