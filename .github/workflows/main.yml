@@ -26,7 +26,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          "C:\sonar-scanner-msbuild\SonarScanner.MSBuild.exe" begin ^
+          "D:\SonarScannner\sonar-scanner net-framework\SonarScanner.MSBuild.exe" begin ^
             /k:"TrainingDemo_UI:master" ^
             /n:"githubAction" ^
             /d:sonar.host.url="https://sonar.cybage.com" ^
