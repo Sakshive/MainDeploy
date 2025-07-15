@@ -45,7 +45,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          "C:\sonar-scanner-msbuild\SonarScanner.MSBuild.exe" end ^
+          "D:\SonarScannner\sonar-scanner net-framework\SonarScanner.MSBuild.exe" end ^
             /d:sonar.login=%SONAR_TOKEN%
 
       - name: Upload build artifact
