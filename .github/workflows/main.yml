@@ -8,88 +8,48 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted  # Self-hosted runner
+    runs-on: self-hosted  # Ensure this runner has .NET Framework and SonarScanner
 
     steps:
-      - uses: actions/checkout@v4  # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Setup MSBuild path
+      - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
+      # Optional: Setup NuGet if you're restoring packages
       # - name: Setup NuGet
       #   uses: NuGet/setup-nuget@v1.0.5
 
-    
+      - name: Begin SonarQube Analysis
+        shell: cmd
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          "C:\sonar-scanner-msbuild\SonarScanner.MSBuild.exe" begin ^
+            /k:"TrainingDemo_UI:master" ^
+            /n:"githubAction" ^
+            /d:sonar.host.url="https://sonar.cybage.com" ^
+            /d:sonar.login=%SONAR_TOKEN% ^
+            /d:sonar.verbose=true
 
-     
-      - name: Build
+      - name: Build Project
         shell: cmd
         run: |
-          msbuild GithubProject.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
+          msbuild GithubProject.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish ^
+            /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" ^
+            /p:configuration="Release" /p:PublishUrl="../_build"
 
-    
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4  #  Updated version
+      - name: End SonarQube Analysis
+        shell: cmd
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          "C:\sonar-scanner-msbuild\SonarScanner.MSBuild.exe" end ^
+            /d:sonar.login=%SONAR_TOKEN%
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifact
           path: "./_build"
- 
-  # download-artifact:
-  #   runs-on: Runner
-  #   needs: build  # This ensures it runs only after the 'build' job completes successfully
-  #   steps:
-  #     - name: Download artifact
-  #       uses: actions/download-artifact@v4  # Latest version
-  #       with:
-  #         name: build-artifact
-  #         path: D:\MyWork\Github_Actions\Runner\Artifact\.NEt_Framework_Artifact
-
-      # - name: Set up Azure CLI
-      #   uses: azure/azure-cli-action@v1
-     # Step 7: Login to Azure using the service principal
- 
-          
-        
-    
-
-
-  # approve:
-  #   runs-on: self-hosted
-  #   needs: build
-  #   environment:
-  #     name: approveit 
-  #   steps:
-  #     - name: Wait for approval before deploying to production
-  #       run: echo "Waiting for manual approval to deploy to production"
-
-
-
-
-
-
-          
-  # deploy:
-  #   runs-on: self-hosted 
-  #   needs: build
-  #   environment:
-  #     name: 'Production'
-  #     url: "githubactiondeployment-apewgvf8d9hxhhfu.northeurope-01.azurewebsites.net"
-
-  #   steps:
-  #     - name: Download artifact from build job
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: build-artifact
-
-  #     - name: Deploy to Azure Web App
-  #       id: deploy-to-webapp
-  #       uses: azure/webapps-deploy@v2
-  #       with:
-  #         app-name: 'githubActionDeployment'
-  #         slot-name: 'Production'
-  #         publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_168A2A56EB3A467789F36DB82C94484F }}
-  #         package:  D:\MyWork\Github_Actions\Runner\Artifact\.NEt_Framework_Artifact
-# =-----------------------------------------------
-
- 
-  
